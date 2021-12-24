@@ -1,72 +1,61 @@
-import React, { useState } from "react";
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
-import { SwipeItem, SwipeButtonContainer } from "react-native-swipe-item";
-import { AntDesign } from "@expo/vector-icons";
+import React from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
 
-export default function TodoItem({ title, done }) {
-	const [todoDone, setTodoDone]=useState(done);
-
-  const editButton = (
-    <SwipeButtonContainer style={styles.editButton}>
-      <TouchableOpacity>
-        <Text>EDIT</Text>
-      </TouchableOpacity>
-    </SwipeButtonContainer>
-  );
-  const deleteButton = (
-    <SwipeButtonContainer style={styles.deleteButton}>
-      <TouchableOpacity>
-        <Text>DELETE</Text>
-      </TouchableOpacity>
-    </SwipeButtonContainer>
-  );
-
+export default function TodoListItem(){
   return (
-    <SwipeItem
-      style={styles.button}
-      swipeContainerStyle={styles.swipeContainerStyle}
-      leftButtons={editButton}
-      rightButtons={deleteButton}
-    >
-      <Text style={styles.title} onPress={()=>setTodoDone(!todoDone)}>
-			  {title}    <AntDesign name={todoDone ? "checkcircle" : "checkcircleo"} size={24} color="black" />
-		  </Text>
-    </SwipeItem>
+    <View style={styles.container}>
+      <TouchableOpacity>
+        <View style={styles.completCircle}>
+          <Icon name='circledowno' size={30} color='black'/>
+        </View>
+      </TouchableOpacity>
+      <Text style={styles.text, styles.strikeText}>
+        Hi
+      </Text>
+      <TouchableOpacity style={styles.buttonContainer}>
+        <Text>
+          <Icon name='delete' size={30} color="red"/>
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  button: {
-    width: "100%",
-    height: 100,
-    alignSelf: "center",
-    marginVertical: 5,
+  container: {
+    flex: 1,
+    borderBottomColor: '#bbb',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  swipeContentContainerStyle: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#ffffff",
-    borderRadius: 10,
-    borderColor: "#e3e3e3",
-    borderWidth: 1,
+  text: {
+    flex: 5,
+    fontWeight: '500',
+    fontSize: 18,
+    marginVertical: 20,
+    width: 100,
   },
-  title: {
-    fontSize: 16,
-    color: "#424242",
-    textAlign: "center",
+  strikeText:{
+    textDecorationLine: 'line-through',
   },
-  editButton: {
-    alignSelf: "center",
-    aspectRatio: 1,
-    flexDirection: "column",
-    padding: 10,
-    backgroundColor: "#cccccc",
+  circle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderColor: 'blue',
+    borderWidth: 2,
+    marginRight: 20,
+    marginLeft: 20,
   },
-  deleteButton: {
-    backgroundColor: "#ff0000",
-    alignSelf: "center",
-    aspectRatio: 1,
-    flexDirection: "column",
-    padding: 10,
+  completCircle:{
+    marginRight: 20,
+    marginLeft: 20,
+  },
+  buttonContainer:{
+    marginVertical: 10,
+    marginHorizontal: 10,
   },
 });
