@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
   },
   title: {
-    color: "#212121",
+    color: "white",
     fontSize: 32,
     fontWeight: "600",
   },

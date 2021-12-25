@@ -2,22 +2,32 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-export default function TodoListItem(){
+const TodoItem = ({textValue, id, checked, onRemove, onToggle}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
-        <View style={styles.completCircle}>
-          <Icon name='circledowno' size={30} color='black'/>
-        </View>
+      <TouchableOpacity onPressOut={onToggle(id)}>
+        {checked ? (
+          <View style={styles.completeCircle}>
+            <Icon name="circledowno" size={30} color="#3143e8" />
+          </View>
+        ) : (
+          <View style={styles.circle} />
+        )}
       </TouchableOpacity>
-      <Text style={styles.text, styles.strikeText}>
-        Hi
+      <Text
+        style={[
+          styles.text,
+          checked ? styles.strikeText : styles.unstrikeText,
+        ]}>
+        {textValue}
       </Text>
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Text>
-          <Icon name='delete' size={30} color="red"/>
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.buttons}>
+        <TouchableOpacity style={styles.buttonContainer}>
+          <Text style={styles.buttonText} onPress={onRemove(id)}>
+            <Icon name="delete" size={30} color="#e33057" />
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -38,9 +48,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     width: 100,
   },
-  strikeText:{
-    textDecorationLine: 'line-through',
-  },
   circle: {
     width: 30,
     height: 30,
@@ -50,12 +57,24 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginLeft: 20,
   },
-  completCircle:{
+  completeCircle: {
     marginRight: 20,
     marginLeft: 20,
   },
-  buttonContainer:{
+  strikeText: {
+    color: '#bbb',
+    textDecorationLine: 'line-through',
+  },
+  unstrikeText: {
+    color: '#29323c',
+  },
+  buttons: {
+    flexDirection: 'row',
+  },
+  buttonContainer: {
     marginVertical: 10,
     marginHorizontal: 10,
   },
 });
+
+export default TodoItem;
