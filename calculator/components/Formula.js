@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
 	container:{
 		flex: 1,
 		marginLeft: "auto",
+    margin: 10,
 	},
 	formulaText: {
     fontSize: 25,

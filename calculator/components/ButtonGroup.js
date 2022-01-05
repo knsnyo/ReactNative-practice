@@ -1,35 +1,34 @@
-import React, { useContext } from "react";
-import { View, Button, TouchOpacity, StyleSheet } from "react-native";
-import { Context } from "../App";
+import React from "react";
+import { View, Button, StyleSheet } from "react-native";
+import CustomButton from "./CustomButton";
 
 export default () => {
-  const {state, dispatch} = useContext(Context);
 
   return (
     <View style={styles.container}>
       <View style={styles.col}>
-        <Button title="7" onPress={() => dispatch({type: '7'})}/>
-        <Button title="8" onPress={() => dispatch({type: '8'})}/>
-        <Button title="9" onPress={() => dispatch({type: '9'})}/>
-        <Button title="÷" onPress={() => dispatch({type: '÷'})}/>
+        <CustomButton value={7}/>
+        <CustomButton value={8}/>
+        <CustomButton value={9}/>
+        <CustomButton value={'÷'}/>
       </View>
 			<View style={styles.col}>
-        <Button title="4" onPress={() => dispatch({type: '4'})}/>
-        <Button title="5" onPress={() => dispatch({type: '5'})}/>
-        <Button title="6" onPress={() => dispatch({type: '6'})}/>
-        <Button title="×" onPress={() => dispatch({type: '×'})}/>
+        <CustomButton value={4}/>
+        <CustomButton value={5}/>
+        <CustomButton value={6}/>
+        <CustomButton value={'×'}/>
       </View>
 			<View style={styles.col}>
-        <Button title="1" onPress={() => dispatch({type: '1'})}/>
-        <Button title="2" onPress={() => dispatch({type: '2'})}/>
-        <Button title="3" onPress={() => dispatch({type: '3'})}/>
-        <Button title="-" onPress={() => dispatch({type: '―'})}/>
+        <CustomButton value={1}/>
+        <CustomButton value={2}/>
+        <CustomButton value={3}/>
+        <CustomButton value={'-'}/>
       </View>
 			<View style={styles.col}>
-        <Button title="C" onPress={() => dispatch({type: 'C'})}/>
-        <Button title="0" onPress={() => dispatch({type: '0'})}/>
-        <Button title="=" onPress={() => dispatch({type: '='})}/>
-        <Button title="+" onPress={() => dispatch({type: '+'})}/>
+        <CustomButton value={'C'}/>
+        <CustomButton value={0}/>
+        <CustomButton value={'='}/>
+        <CustomButton value={'+'}/>
       </View>
     </View>
   );

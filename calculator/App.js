@@ -45,8 +45,8 @@ const reducer = (state, action) => {
           result: eval(
             state.formula.replace('×', '*')
             .replace('÷', '/')
-            ),
-          formula: state.result,
+          ),
+          formula: init.formula,
         };
     case `${action.type}`:
       return{
