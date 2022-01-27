@@ -7,6 +7,12 @@ export default () => {
   return (
     <View style={styles.container}>
       <View style={styles.col}>
+        <CustomButton value={'sin'}/>
+        <CustomButton value={'cos'}/>
+        <CustomButton value={'tan'}/>
+        <CustomButton value={':)'}/>
+      </View>
+      <View style={styles.col}>
         <CustomButton value={7}/>
         <CustomButton value={8}/>
         <CustomButton value={9}/>

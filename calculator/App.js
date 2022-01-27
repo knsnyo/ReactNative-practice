@@ -15,7 +15,7 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, init);
 
   return (
-    <Context.Provider value={{state, dispatch}}>
+    <Context.Provider value={{ state, dispatch }}>
       <View style={styles.container}>
         <View style={styles.formula}>
           <Formula />
@@ -32,35 +32,56 @@ export default function App() {
 }
 
 const reducer = (state, action) => {
-  switch(action.type){
-    case 'C':
-      return{
+  switch (action.type) {
+    case ":)":
+      return {
+        ...state,
+        formula: init.formula,
+        result: "MADE BY KNSNYO"
+      }
+    case "C":
+      return {
         ...state,
         formula: init.formula,
         result: init.result,
       };
-      case '=':
-        return{
-          ...state,
-          result: eval(
-            state.formula.replace('×', '*')
-            .replace('÷', '/')
-          ),
-          formula: init.formula,
-        };
+    case "=":
+      return {
+        ...state,
+        result: eval(state.formula.replace("×", "*").replace("÷", "/")),
+        formula: init.formula,
+      };
+    case "sin":
+      return {
+        ...state,
+        result: Math.sin((state.formula * Math.PI) / 180),
+        formula: init.formula,
+      };
+    case "cos":
+      return {
+        ...state,
+        result: Math.cos((state.formula * Math.PI) / 180),
+        formula: init.formula,
+      };
+    case "tan":
+      return {
+        ...state,
+        result: Math.tan((state.formula * Math.PI) / 180),
+        formula: init.formula,
+      };
     case `${action.type}`:
-      return{
+      return {
         ...state,
         formula: state.formula + `${action.type}`,
       };
     default:
-      return{
+      return {
         ...state,
         formula: init.formula,
         result: init.result,
       };
   }
-}
+};
 
 const styles = StyleSheet.create({
   container: {
