@@ -1,13 +1,16 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+
+const { height } = Dimensions.get("screen");
 
 export default function Content() {
   return (
     <View style={styles.container}>
-      <Text>오징어게임</Text>
+      <Text style={styles.text}>오징어게임</Text>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -20,4 +23,12 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: "gray",
   },
+	text: {
+		fontSize: height / 15,
+		textAlignVertical: "center",
+		justifyContent: "center",
+		alignItems: "center",
+		textAlign: "center",
+		height: height / 15,
+	},
 });
