@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, View, Dimensions } from "react-native";
+import { StyleSheet, TextInput, View, Button } from "react-native";
 
 export default function Search() {
-	const fullWidth = Dimensions.get("window").width;
-	const fullHeight = Dimensions.get("window").height;
-
-	const [item, setItem] = useState("");
-	return (
-		<View style={styles.container}>
-			<TextInput
-			style={styles.input}
-			onChangeText={setItem}
-			value={item}
-			placeholder="search bar"
-			/>
-		</View>
-	);
+  const [item, setItem] = useState("");
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        onChangeText={setItem}
+        value={item}
+        placeholder="search bar"
+      />
+      <View style={styles.button}>
+        <Button title="search" onPress />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -24,12 +24,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
   },
-	input: {
-		width: "100%",
+  input: {
+    width: "90%",
     height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,
+  },
+	button: {
+		width: "10%",
 	}
 });
