@@ -1,11 +1,12 @@
 import React from "react";
 import { StyleSheet, View } from "react-native"
 import SearchScreen from "./screen/searchScreen/SearchScreen";
+import SingleScreen from "./screen/singleScreen/SingleScreen";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <SearchScreen/>
+      <SingleScreen/>
     </View>
   );
 }
