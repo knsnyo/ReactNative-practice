@@ -1,17 +1,22 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Image } from "react-native";
+
+let imagePath = require("./test.jpg");
 
 export default function SingleScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.images}>
-          <Text>이미지</Text>
+          <Image
+          style={{width: "100%", height: "100%"}}
+          source={imagePath}
+          />
         </View>
         <View style={styles.info}>
-          <Text>제목</Text>
-          <Text>배급사</Text>
-          <Text>평점</Text>
+          <Text style={styles.text}>제목</Text>
+          <Text style={styles.text}>배급사</Text>
+          <Text style={styles.text}>별점</Text>
         </View>
       </View>
       <View style={styles.body}>
@@ -49,4 +54,7 @@ const styles = StyleSheet.create({
     flex: 8,
     justifyContent: "space-around",
   },
+  text: {
+    textAlign: "center",
+  }
 });

@@ -6,31 +6,18 @@ export default function Contents() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
-        <Content />
+        <View style={styles.content}>
+          <Content />
+        </View>
+        <View style={styles.content}>
+          <Content />
+        </View>
+        <View style={styles.content}>
+          <Content />
+        </View>
+        <View style={styles.content}>
+          <Content />
+        </View>
       </View>
     </ScrollView>
   );
@@ -39,6 +26,15 @@ export default function Contents() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 0,
+    flexDirection: "row",
+  },
+  content: {
+    flex: 1,
+    width: "100%",
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",

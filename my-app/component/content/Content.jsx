@@ -6,7 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/AntDesign";
 
 const { height } = Dimensions.get("screen");
 
@@ -18,9 +18,9 @@ export default function Content() {
       <TouchableOpacity onPress={() => setFavorite(!favorite)}>
         <View>
           {favorite ? (
-            <Icon name="star" size={height / 15} color="#ffff00" />
+            <Icon name="pushpin" size={height / 15} color="red" />
           ) : (
-            <Icon name="star-o" size={height / 15} color="#ffff00" />
+            <Icon name="pushpino" size={height / 15} color="red" />
           )}
         </View>
       </TouchableOpacity>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 8,
-    fontSize: height / 15,
+    fontSize: 20,
     textAlignVertical: "center",
     justifyContent: "center",
     alignItems: "center",

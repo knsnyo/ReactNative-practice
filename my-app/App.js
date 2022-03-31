@@ -6,7 +6,7 @@ import SingleScreen from "./screen/singleScreen/SingleScreen";
 export default function App() {
   return (
     <View style={styles.container}>
-      <SingleScreen/>
+      <SearchScreen/>
     </View>
   );
 }
