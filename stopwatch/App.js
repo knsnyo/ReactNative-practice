@@ -3,38 +3,50 @@ import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View } from "react-native";
 
 export default () => {
-  const [running, setRunning] = React.useState(false);
-  const [hour, setHour] = React.useState(0);
-  const [minute, setMinute] = React.useState(0);
-  const [second, setSecond] = React.useState(0);
+  let timer = 0;
+  let interval;
+  let isStop = true;
+  const [time, setTime] = React.useState("00:00:00");
 
   const runningHandler = () => {
-    setRunning(!running);
-    if (running) {
-      setInterval(() => {
-        console.log("hello");
-        setSecond(second + 1);
+    isStop ? isStop = false : isStop = true;
+    console.log(`isStop? : ${isStop}`);
+    if(!isStop) {
+      interval = setInterval(() => {
+        timer += 1;
+        let min = Math.floor(timer / 60);
+        let hour = Math.floor(min / 60);
+        let sec = timer % 60;
+        min %= 60;
+    
+        hour < 10 && (hour = "0" + hour);
+        min < 10 && (min = "0" + min);
+        sec < 10 && (sec = "0" + sec);
+    
+        setTime(`${hour}:${min}:${sec}`);
       }, 1000);
-    } 
+    } else {
+      clearInterval(interval);
+    }
   };
 
   const recordHandler = () => {
-    running && console.log("기록");
+    running && console.log(`기록: ${time}`);
   };
 
   const resetHandler = () => {
-    setRunning(false);
+    console.log("reset");
+    isStop = true;
+    setTime("00:00:00");
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.container}>
-        <Text style={{ fontSize: 60 }}>
-          {hour} : {minute} : {second}
-        </Text>
+        <Text style={{ fontSize: 60 }}>{time}</Text>
       </View>
       <View style={styles.buttonGroup}>
-        <Button title={running ? "stop" : "start"} onPress={runningHandler} />
+        <Button title={isStop ? "start" : "stop"} onPress={runningHandler} />
         <Button title="record" onPress={recordHandler} />
         <Button title="reset" onPress={resetHandler} />
       </View>
