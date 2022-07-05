@@ -3,50 +3,48 @@ import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View } from "react-native";
 
 export default () => {
-  let timer = 0;
-  let interval;
-  let isStop = true;
-  const [time, setTime] = React.useState("00:00:00");
+  const [timer, setTimer] = React.useState(0);
+  const [isActive, setIsActive] = React.useState(false);
+  const stopwatch = React.useRef(null);
 
   const runningHandler = () => {
-    isStop ? isStop = false : isStop = true;
-    console.log(`isStop? : ${isStop}`);
-    if(!isStop) {
-      interval = setInterval(() => {
-        timer += 1;
-        let min = Math.floor(timer / 60);
-        let hour = Math.floor(min / 60);
-        let sec = timer % 60;
-        min %= 60;
-    
-        hour < 10 && (hour = "0" + hour);
-        min < 10 && (min = "0" + min);
-        sec < 10 && (sec = "0" + sec);
-    
-        setTime(`${hour}:${min}:${sec}`);
-      }, 1000);
-    } else {
-      clearInterval(interval);
+    setIsActive(!isActive);
+    {
+      !isActive ?
+      (stopwatch.current = setInterval(() => {
+        setTimer((time) => time + 1);
+      }, 10))
+      :
+      (clearInterval(stopwatch.current));
     }
   };
 
   const recordHandler = () => {
-    running && console.log(`기록: ${time}`);
+    console.log(viewTime());
   };
 
   const resetHandler = () => {
-    console.log("reset");
-    isStop = true;
-    setTime("00:00:00");
+    clearInterval(stopwatch.current);
+    setIsActive(false);
+    setTimer(0);
   };
+
+  const viewTime = () => {
+    let ms = `0${(timer % 60)}`.slice(-2);
+    let sec = `${Math.floor(timer / 60)}`;
+    sec = `0${sec % 60}`.slice(-2);
+    let min = `0${Math.floor(timer / 3600)}`.slice(-2);
+
+    return `${min}:${sec}:${ms}`;
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.container}>
-        <Text style={{ fontSize: 60 }}>{time}</Text>
+        <Text style={{ fontSize: 60 }}>{viewTime()}</Text>
       </View>
       <View style={styles.buttonGroup}>
-        <Button title={isStop ? "start" : "stop"} onPress={runningHandler} />
+        <Button title={isActive ? "pause" : "start"} onPress={runningHandler} />
         <Button title="record" onPress={recordHandler} />
         <Button title="reset" onPress={resetHandler} />
       </View>
