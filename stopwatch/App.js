@@ -1,6 +1,6 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View, ScrollView } from "react-native";
 
 export default () => {
   const [timer, setTimer] = React.useState(0);
@@ -11,18 +11,16 @@ export default () => {
   const runningHandler = () => {
     setIsActive(!isActive);
     {
-      !isActive ?
-      (stopwatch.current = setInterval(() => {
-        setTimer((time) => time + 1);
-      }, 10))
-      :
-      (clearInterval(stopwatch.current));
+      !isActive
+        ? (stopwatch.current = setInterval(() => {
+            setTimer((time) => time + 1);
+          }, 10))
+        : clearInterval(stopwatch.current);
     }
   };
 
   const recordHandler = () => {
-    console.log(viewTime());
-    setRecord([...record, viewTime()]);
+    timer !== 0 && setRecord([...record, viewTime()]);
   };
 
   const resetHandler = () => {
@@ -33,24 +31,29 @@ export default () => {
   };
 
   const viewTime = () => {
-    let ms = `0${(timer % 60)}`.slice(-2);
+    let ms = `0${timer % 60}`.slice(-2);
     let sec = `${Math.floor(timer / 60)}`;
     sec = `0${sec % 60}`.slice(-2);
     let min = `0${Math.floor(timer / 3600)}`.slice(-2);
 
-    return `${min}:${sec}:${ms}`;
-  }
+    return `${min}:${sec}.${ms}`;
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.container}>
         <Text style={{ fontSize: 60 }}>{viewTime()}</Text>
       </View>
-      <View>
-        {record.map((data) => (
-          <Text>{data}</Text>
+      <ScrollView style={styles.scroll}>
+        {record.map((data, index) => (
+          <View style={styles.record} key={index}>
+            <Text style={{fontSize: 40}}>{index + 1}</Text>
+            <Text style={styles.text}>
+              {data}
+            </Text>
+          </View>
         ))}
-      </View>
+      </ScrollView>
       <View style={styles.buttonGroup}>
         <Button title={isActive ? "pause" : "start"} onPress={runningHandler} />
         <Button title="record" onPress={recordHandler} />
@@ -76,4 +79,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
   },
+  scroll: {
+    flex: 1,
+    width: "100%",
+  },
+  text: {
+    width: "100%",
+    fontSize: 40,
+    textAlign: "center",
+  },
+  record: {
+    width: "100%",
+    flexDirection:"row",
+    borderWidth: 1,
+    borderColor: "#ddd",
+  }
 });
