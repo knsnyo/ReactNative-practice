@@ -6,6 +6,7 @@ export default () => {
   const [timer, setTimer] = React.useState(0);
   const [isActive, setIsActive] = React.useState(false);
   const stopwatch = React.useRef(null);
+  const [record, setRecord] = React.useState([]);
 
   const runningHandler = () => {
     setIsActive(!isActive);
@@ -21,12 +22,14 @@ export default () => {
 
   const recordHandler = () => {
     console.log(viewTime());
+    setRecord([...record, viewTime()]);
   };
 
   const resetHandler = () => {
     clearInterval(stopwatch.current);
     setIsActive(false);
     setTimer(0);
+    setRecord([]);
   };
 
   const viewTime = () => {
@@ -42,6 +45,11 @@ export default () => {
     <View style={styles.container}>
       <View style={styles.container}>
         <Text style={{ fontSize: 60 }}>{viewTime()}</Text>
+      </View>
+      <View>
+        {record.map((data) => (
+          <Text>{data}</Text>
+        ))}
       </View>
       <View style={styles.buttonGroup}>
         <Button title={isActive ? "pause" : "start"} onPress={runningHandler} />
