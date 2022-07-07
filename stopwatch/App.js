@@ -20,7 +20,11 @@ export default () => {
   };
 
   const recordHandler = () => {
-    timer !== 0 && setRecord([...record, viewTime()]);
+    if(0 !== timer) {
+      let newRecord = [...record].reverse();
+      newRecord.push(viewTime());
+      setRecord([...newRecord].reverse());
+    }
   };
 
   const resetHandler = () => {
@@ -44,13 +48,16 @@ export default () => {
       <View style={styles.container}>
         <Text style={{ fontSize: 60 }}>{viewTime()}</Text>
       </View>
+      {record.length != 0 && (
+        <View style={styles.record}>
+          <Text style={styles.text}>기록</Text>
+        </View>
+      )}
       <ScrollView style={styles.scroll}>
         {record.map((data, index) => (
-          <View style={styles.record} key={index}>
-            <Text style={{fontSize: 40}}>{index + 1}</Text>
-            <Text style={styles.text}>
-              {data}
-            </Text>
+          <View style={styles.record} key={record.length - index}>
+            <Text style={{ fontSize: 40 }}>{record.length - index}</Text>
+            <Text style={styles.text}>{data}</Text>
           </View>
         ))}
       </ScrollView>
@@ -90,8 +97,8 @@ const styles = StyleSheet.create({
   },
   record: {
     width: "100%",
-    flexDirection:"row",
+    flexDirection: "row",
     borderWidth: 1,
     borderColor: "#ddd",
-  }
+  },
 });
