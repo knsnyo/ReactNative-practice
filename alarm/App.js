@@ -1,34 +1,43 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View, Button, ScrollView, Pressable, } from "react-native";
 
 export default function App() {
+  const ampm = [" ", "오전", "오후", " ",];
+  const hour = [" ","12", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", " ",];
+  const min = [" ","00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", " ",];
   return (
     <View style={styles.container}>
       <View style={styles.row}>
         <View style={styles.section}>
-          <Text style={styles.text}></Text>
+          <ScrollView style={styles.scroll}>
+            {ampm.map((data) => (
+              <Pressable style={styles.item}>
+                <Text>{data}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
         </View>
         <View style={styles.section}>
-          <Text>시</Text>
-        </View>
-        <View style={styles.section}>
-          <Text>분</Text>
-        </View>
-      </View>
-      <View style={styles.row}>
-        <View style={styles.section}>
-          <Text>오전/오후</Text>
-        </View>
-        <View style={styles.section}>
-          <Text>00</Text>
+          <ScrollView>
+            {hour.map((data) => (
+              <Pressable>
+                <Text>{data}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
         </View>
         <Text>:</Text>
         <View style={styles.section}>
-          <Text>00</Text>
+          <ScrollView>
+            {min.map((data) => (
+              <Pressable>
+                <Text>{data}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
         </View>
       </View>
       <View style={styles.container}>
-        <Button title="START" onPress/>
+        <Button title="START" onPress />
       </View>
     </View>
   );
@@ -42,20 +51,29 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   row: {
-    flex: 1,
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
     width: "100%",
+    height: 99,
   },
   section: {
-    flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#eee",
     justifyContent: "center",
     alignItems: "center",
+    height: "100%",
+    width: "33%"
   },
   text: {
     textAlign: "center",
   },
+  scroll: {
+    backgroundColor: "#ddd",
+    height: "100%",
+  },
+  item: {
+    height: 33,
+    //backgroundColor: "#ddd",
+  }
 });
