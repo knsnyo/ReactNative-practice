@@ -1,107 +1,167 @@
 import React from "react";
-import { StyleSheet, Text, View, Button, ScrollView, Pressable, } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, ScrollView, Pressable, Animated, TouchableWithoutFeedback, } from "react-native";
+import { debounce } from "lodash";
 
-const BUTTON_SIZE = 66;
+// 상수 모음
+const BUTTON_HEIGHT = 50;
+const VIEW_WIDTH = 250;
+const VIEW_HEIGHT = BUTTON_HEIGHT * 3;
+const GAP = 12;
 
-const getCenterPosition = (offsetY) => {
-  const btnIndex = Math.round(offsetY / BUTTON_SIZE);
-  return btnIndex * BUTTON_SIZE;
-};
+// 제일 가까운 item 값 찾아주기
+const getCenterPosition = offsetY => btnIndex = Math.round(offsetY / BUTTON_HEIGHT) * BUTTON_HEIGHT;
+const getCenterPositionFromIndex = index => index * BUTTON_HEIGHT;
 
-const getCenterPositionFromIndex = (index) => {
-  return index * BUTTON_SIZE;
+// 빈칸 만들어 주는 함수
+const fillEmpty = (visibleCount, values) => {
+  const fillCount = (visibleCount - 1) / 2;
+  for (let i = 0; i < fillCount; i++) {
+    values.unshift("");
+    values.push("");
+  }
+  return values;
 }
 
-export default function App() {
-  const ampm = [" ", "오전", "오후", "  ",];
-  const hour = [" ","12", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "  ",];
-  const min = [" ","00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "  ",];
-
-
-
-  const getOnPress = (scrollViewIdx, btnIdx) => {
-    const targetIdx = btnIdx - 1;
-    if(targetIdx < 0) return;
-    const CENTER_POSITION = getCenterPositionFromIndex(targetIdx);
-    //scrollProps[scrollViewIdx].ref.current.scrollTo({y: CENTER_POSITION});
-  };
-
+export default () => {
   return (
-    <View style={styles.container}>
-      <View style={styles.container}/>
-      <View style={styles.row}>
-        <View style={styles.section}>
-          <ScrollView style={styles.scroll}>
-            {ampm.map((data, index) => (
-              <Pressable key={`ampm${data}`} style={styles.item} onPress={getOnPress(index)}>
-                <Text style={styles.text}>{data}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-        <View style={styles.section}>
-          <ScrollView style={styles.scroll}>
-            {hour.map((data) => (
-              <Pressable key={`hour${data}`} style={styles.item}>
-                <Text style={styles.text}>{data}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-        <Text>:</Text>
-        <View style={styles.section}>
-          <ScrollView style={styles.scroll}>
-            {min.map((data) => (
-              <Pressable key={`min${data}`} style={styles.item}>
-                <Text style={styles.text}>{data}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-      </View>
-      <View style={styles.container}>
-        <Button title="START" onPress />
-      </View>
+    <View style={styles.view}>
+      <TimePicker
+        width={VIEW_WIDTH}
+        buttonHeight={BUTTON_HEIGHT}
+        visibleCount={3}
+      />
+      <StatusBar style="auto" />
     </View>
   );
 }
 
+const TimePicker = ({ width, buttonHeight, visibleCount }) => {
+  
+  if (0 === visibleCount % 2) throw new Error("visibleCount must be odd");
+
+  const scrollY = React.useRef(new Animated.Value(0)).current;
+  const refs = React.useRef(
+    // Array.from({ length: 3}) : 길이 3인 배열 얕은 복사
+    // 배열 마다 ref 넣기
+    Array.from({ length: 3}).map(() => React.createRef())
+  );
+  // 스크롤 멈췄을 때
+  const getOnScrollStop = index => (offsetY, label) => {
+    const CENTER_POSITION = getCenterPosition(offsetY);
+    refs.current[index].current.scrollTo({ y: CENTER_POSITION})
+  };
+
+  const getScrollProps = index => {
+    const onScrollStop = debounce(getOnScrollStop(index), 200, {
+      leading: false,
+      trailing: true,
+    });
+    return {
+      showsVerticalScrollIndicator: false,
+      contentContainerStyle: {
+        left: 0,
+        right: 0,
+        position: "absolute",
+      },
+      ref: refs.current[index],
+      onScrollBeginDrag: _ => {
+        onScrollStop.cancel();
+      },
+      onScrollEndDrag: e => {
+        onScrollStop.cancel();
+        onScrollStop(e.nativeEvent.contentOffset.y, "onScrollEndDrag");
+      },
+      onMomentumScrollBegin: _ => {
+        onScrollStop.cancel();
+      },
+      onMomentumScrollEnd: e => {
+        onScrollStop.cancel();
+        onScrollStop(e.nativeEvent.contentOffset.y, "onMomentumScrollEnd");
+      },
+    };
+  };
+
+  // setter 없는 useState 아마도...
+  const [scrollProps] = React.useState(() => Array.from({ length: 3}).map((_, index) => getScrollProps(index)));
+
+  const getOnPress = (scrollViewIndex, buttonIndex) => _ => {
+    const targetIndex = buttonIndex -1;
+    console.log(targetIndex);
+    if (targetIndex < 0) return;
+    const CENTER_POSITION = getCenterPositionFromIndex(targetIndex);
+    scrollProps[scrollViewIndex].ref.current.scrollTo({ y: CENTER_POSITION});
+  };
+
+  return (
+    <View style={[styles.container, {width, height: visibleCount * buttonHeight}]}>
+      <ScrollView {...scrollProps[0]}>
+        {fillEmpty(visibleCount, ["오전", "오후"]).map((item, index) => (
+          <Button label={item} onPress={getOnPress(0, index)}/>
+        ))}
+      </ScrollView>
+      <GapView/>
+      <ScrollView {...scrollProps[1]}>
+        {fillEmpty(visibleCount, ["12", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"]).map((item, index) => (
+          <Button label={item} onPress={getOnPress(1, index)}/>
+        ))}
+      </ScrollView>
+      <GapView/>
+      <ScrollView {...scrollProps[2]}>
+        {fillEmpty(visibleCount, ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"]).map((item, index) => (
+          <Button label={item} onPress={getOnPress(2, index)}/>
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
+
+const Button = ({ label, onPress }) => {
+  return (
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={styles.button}>
+        <Text style={styles.buttonLabel}>{label}</Text>
+      </View>
+    </TouchableWithoutFeedback>
+  )
+}
+
+const GapView = ({children}) => {
+  return (
+    <View style={styles.gap}>
+      {children}
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
-  container: {
+  view: {
     flex: 1,
-    backgroundColor: "#fff",
+    justifyContent: 'center',
+    padding: 8,
+  },
+  container: {
+    borderWidth: 1,
+    alignSelf: 'center',
+    flexDirection: 'row',
+  },
+  button: {
+    borderBottomWidth:1,
+    borderColor:'red',
+    height: BUTTON_HEIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonLabel: {
+    fontWeight: 'bold',
+  },
+  overlay: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gap: {
     alignItems: "center",
     justifyContent: "center",
+    width: GAP,
   },
-  row: {
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    width: "100%",
-    height: BUTTON_SIZE * 3,
-  },
-  section: {
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    width: "33%"
-  },
-  text: {
-    textAlign: "center",
-  },
-  scroll: {
-    backgroundColor: "#fff",
-    width: "100%",
-    height: "100%",
-  },
-  item: {
-    height: BUTTON_SIZE,
-    borderBottomWidth: 1,
-    borderTopWidth: 1,
-    borderColor: "#eee",
-    //backgroundColor: "#ddd",
-    justifyContent: "center",
-  }
 });
