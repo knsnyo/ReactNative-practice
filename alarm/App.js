@@ -10,8 +10,10 @@ export default () => {
 
   return (
     <View style={styles.view}>
-      <Text>{time.toTimeString()}</Text>
+      <Text>{time.toTimeString().slice(0, 5)}</Text>
       <TimePicker
+        value={time}
+        onChange={setTime}
         width={VIEW_WIDTH}
         buttonHeight={BUTTON_HEIGHT}
         visibleCount={3}
