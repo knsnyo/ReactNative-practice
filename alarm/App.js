@@ -8,16 +8,28 @@ import { asPickerFormat } from "./utils";
 export default () => {
   const [time, setTime] = React.useState(asPickerFormat(new Date()));
   const alarm = React.useRef(null);
+  const [currentTime, setCurrentTime] = React.useState(new Date());
+  let isActive = false;
+
+  React.useEffect(_ => {
+    if (time.toTimeString().slice(0, 5) == asPickerFormat(currentTime).toTimeString().slice(0, 5)) {
+      console.log("useEffect");
+      isActive = false;
+      clearInterval(alarm.current);
+    }
+  }, [currentTime]);
 
   const alarmHandler = _ => {
-    console.log("HI");
-    let currentTime;
+    if (isActive) return;
+    console.log("alarmHandler");
+    isActive = true;
     alarm.current = setInterval(_ => {
-      currentTime = new Date();
-      console.log(`time: ${time.toTimeString().slice(0, 5)}`);
-      console.log(`currentTime: ${currentTime.toTimeString().slice(0, 5)}`);
-      console.log(time.toTimeString().slice(0, 5) == asPickerFormat(currentTime).toTimeString().slice(0, 5));
-      if(currentTime == time) clearInterval(alarm.current);
+      if (isActive) {
+        setCurrentTime(new Date());
+        console.log(`time: ${time.toTimeString().slice(0, 5)}`);
+        console.log(`currentTime: ${currentTime.toTimeString().slice(0, 5)}`);
+        console.log(time.toTimeString().slice(0, 5) == asPickerFormat(currentTime).toTimeString().slice(0, 5));
+      }
     }, 1000);
   };
 
